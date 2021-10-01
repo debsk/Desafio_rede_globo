@@ -1,11 +1,15 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from interactors.interactor_create_card import CreateCardResquestModel
 
 card = APIRouter()
 
 
 @card.post("/card")
-def create_card():
-    return {}
+async def create_card(json_body: Request):
+    body = await json_body.json()
+    request = CreateCardResquestModel(body)
+    
+    return {} #objeto_vazio
 
 
 @card.get("/card")
