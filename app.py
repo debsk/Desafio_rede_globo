@@ -1,4 +1,4 @@
-from routes import card_routes, tag_routes
+from desafiolib.routes import tag_routes, card_routes
 from fastapi import FastAPI
 
 app = FastAPI(app_name='desafio')
