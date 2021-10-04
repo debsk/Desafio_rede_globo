@@ -2,7 +2,7 @@ from domain.database.settings import UserAlchemyAdapter
 from domain.models.tag_models import Tag
 
 
-class CreateTagResquestModel:
+class CreateTagRequestModel:
     def __init__(self, body):
         self.name = body.name
 
@@ -16,22 +16,21 @@ class CreateTagResponseModel:
 
 
 class CreateTagInteractor:
-    def __init__(self, request: CreateTagResquestModel,
+    def __init__(self, request: CreateTagRequestModel,
                  adapter: UserAlchemyAdapter):
         self.request = request
         self.adapter = adapter
 
     def _create_tag(self):
         tag = Tag(name=self.request.name)
-        return tag
 
-    def _save_tag(self, tag):
         self.adapter.add(tag)
         self.adapter.commit()
         self.adapter.refresh(tag)
 
+        return tag
+
     def run(self):
         tag = self._create_tag()
-        self._save_tag(tag)
         response = CreateTagResponseModel(tag)
         return response

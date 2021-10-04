@@ -3,7 +3,7 @@ from domain.models.card_models import Card
 import json
 
 
-class CreateCardResquestModel:
+class CreateCardRequestModel:
     def __init__(self, body):
         self.text = body.text
         self.tags = body.tags
@@ -18,7 +18,7 @@ class CreateCardResponseModel:
 
 
 class CreateCardInteractor:
-    def __init__(self, request: CreateCardResquestModel,
+    def __init__(self, request: CreateCardRequestModel,
                  adapter: UserAlchemyAdapter):
         self.request = request
         self.adapter = adapter
@@ -27,15 +27,13 @@ class CreateCardInteractor:
         card = Card(text=self.request.text,
                     tags=json.dumps(self.request.tags))
 
-        return card
-
-    def _save_card(self, card):
         self.adapter.add(card)
         self.adapter.commit()
         self.adapter.refresh(card)
 
+        return card
+
     def run(self):
         card = self._create_card()
-        self._save_card(card)
         response = CreateCardResponseModel(card)
         return response
