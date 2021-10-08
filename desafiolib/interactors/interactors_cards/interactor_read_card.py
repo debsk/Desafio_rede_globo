@@ -22,15 +22,15 @@ class ReadCardInteractor:
         self.request = request
         self.adapter = adapter
 
-    @staticmethod
-    def _check_exist_read_card(card):
-        if card is None:
-            raise HTTPException(status_code=400,
-                                detail="Card not exist")
-
     def _get_read_card(self):
         return self.adapter.query(Card). \
             filter(Card.id == self.request.card_id).first()
+
+    def _check_exist_read_card(self):
+        card = self._get_read_card()
+        if card is None:
+            raise HTTPException(status_code=400,
+                                detail="Card not exist")
 
     def run(self):
         card = self._get_read_card()

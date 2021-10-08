@@ -54,19 +54,33 @@ def test_read_card_interactor(interactor_factory):
     assert interactor.adapter == mock_adapter
 
 
+@patch.object(ReadCardInteractor, '_get_read_card')
+def test_check_user_exists(mock_get_read_card,
+                           interactor_factory):
+    interactor = interactor_factory()
+
+    interactor._get_read_card.return_value = None
+
+    interactor._get_read_card()
+
+    mock_get_read_card.assert_called_once()
+
+
 def test_read_card_interactor_get_read_card(interactor_factory):
     interactor = interactor_factory()
 
     result = interactor._get_read_card()
 
-    card_mock = interactor.adapter.card_models().filter().first()
+    card_mock = interactor.adapter.query().filter().first()
 
     assert result == card_mock
 
 
 @patch.object(ReadCardInteractor, '_get_read_card')
+@patch.object(ReadCardInteractor, '_check_exist_read_card')
 @patch(f'{patch_root}.ReadCardResponseModel')
 def test_read_card_interactor_run(mock_response,
+                                  mock_check,
                                   mock_read_card,
                                   interactor_factory):
     interactor = interactor_factory()
@@ -74,6 +88,8 @@ def test_read_card_interactor_run(mock_response,
     result = interactor.run()
 
     mock_read_card.assert_called_once()
+
+    mock_check.assert_called_once_with(mock_read_card())
 
     mock_response.assert_called_once_with(mock_read_card())
 

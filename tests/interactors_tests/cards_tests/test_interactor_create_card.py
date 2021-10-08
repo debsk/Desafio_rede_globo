@@ -55,6 +55,28 @@ def test_create_card_interactor(interactor_factory):
     assert interactor.adapter == mock_adapter
 
 
+def test_read_card_interactor_get_card(interactor_factory):
+    interactor = interactor_factory()
+
+    result = interactor._get_card()
+
+    card_mock = interactor.adapter.query().filter().first()
+
+    assert result == card_mock
+
+
+@patch.object(CreateCardInteractor, '_get_card')
+def test_check_card_exists(mock_get_card,
+                           interactor_factory):
+    interactor = interactor_factory()
+
+    interactor._get_card.return_value = None
+
+    interactor._get_card()
+
+    mock_get_card.assert_called_once()
+
+
 @patch(f'{patch_root}.json')
 @patch(f'{patch_root}.Card')
 def test_create_card_interactor_create_card(mock_function_card,
@@ -75,14 +97,18 @@ def test_create_card_interactor_create_card(mock_function_card,
 
 
 @patch.object(CreateCardInteractor, '_create_card')
+@patch.object(CreateCardInteractor, '_check_exist_card')
 @patch(f'{patch_root}.CreateCardResponseModel')
 def test_post_create_user_interactor_run(mock_response,
+                                         mock_check,
                                          mock_create_card,
                                          interactor_factory):
 
     interactor = interactor_factory()
 
     result = interactor.run()
+
+    mock_check.assert_called_once()
 
     mock_create_card.assert_called_once()
 
