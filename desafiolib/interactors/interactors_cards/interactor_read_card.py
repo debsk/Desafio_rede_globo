@@ -1,5 +1,6 @@
 from domain.database.settings import UserAlchemyAdapter
 from domain.models.card_models import Card
+from fastapi import HTTPException
 
 
 class ReadCardRequestModel:
@@ -12,7 +13,7 @@ class ReadCardResponseModel:
         self.card = card
 
     def __call__(self):
-        return self.card.to_json()
+        return self.card
 
 
 class ReadCardInteractor:
@@ -21,11 +22,18 @@ class ReadCardInteractor:
         self.request = request
         self.adapter = adapter
 
+    @staticmethod
+    def _check_exist_read_card(card):
+        if card is None:
+            raise HTTPException(status_code=400,
+                                detail="Card not exist")
+
     def _get_read_card(self):
-        return self.adapter.card_models(Card). \
+        return self.adapter.query(Card). \
             filter(Card.id == self.request.card_id).first()
 
     def run(self):
         card = self._get_read_card()
+        self._check_exist_read_card(card)
         response = ReadCardResponseModel(card)
         return response
