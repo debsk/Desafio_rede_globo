@@ -1,5 +1,6 @@
 from domain.database.settings import UserAlchemyAdapter
 from domain.models.tag_models import Tag
+from fastapi import HTTPException
 
 
 class ReadTagRequestModel:
@@ -12,7 +13,7 @@ class ReadTagResponseModel:
         self.tag = tag
 
     def __call__(self):
-        return self.tag.to_json()
+        return self.tag
 
 
 class ReadTagInteractor:
@@ -21,11 +22,18 @@ class ReadTagInteractor:
         self.request = request
         self.adapter = adapter
 
+    @staticmethod
+    def _check_exist_read_card(tag):
+        if tag is None:
+            raise HTTPException(status_code=400,
+                                detail="Tag not exist")
+
     def _get_read_tag(self):
-        return self.adapter.tag_models(Tag). \
+        return self.adapter.query(Tag). \
             filter(Tag.id == self.request.tag_id).first()
 
     def run(self):
         tag = self._get_read_tag()
+        self._check_exist_read_card(tag)
         response = ReadTagResponseModel(tag)
         return response

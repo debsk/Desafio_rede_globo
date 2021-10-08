@@ -1,6 +1,9 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, DateTime
 from domain.database.settings import Base
+import json
 import datetime
 
 
@@ -16,7 +19,11 @@ class Card(Base):
     def to_json(self):
         return vars(self)
 
+    # def _list_tags(self):
+    #     return json.loads(self.tags)
+
     class Schema(BaseModel):
+        id: Optional[int]
         text: str
         tags: list
 
