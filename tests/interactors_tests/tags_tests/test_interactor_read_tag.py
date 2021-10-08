@@ -65,8 +65,22 @@ def test_read_tag_interactor_get_read_tag(interactor_factory):
 
 
 @patch.object(ReadTagInteractor, '_get_read_tag')
+def test_check_user_exists(mock_get_read_tag,
+                           interactor_factory):
+    interactor = interactor_factory()
+
+    interactor._get_read_tag.return_value = None
+
+    interactor._get_read_tag()
+
+    mock_get_read_tag.assert_called_once()
+
+
+@patch.object(ReadTagInteractor, '_get_read_tag')
+@patch.object(ReadTagInteractor, '_check_exist_read_card')
 @patch(f'{patch_root}.ReadTagResponseModel')
 def test_read_tag_interactor_run(mock_response,
+                                 mock_check,
                                  mock_read_tag,
                                  interactor_factory):
     interactor = interactor_factory()
@@ -74,6 +88,8 @@ def test_read_tag_interactor_run(mock_response,
     result = interactor.run()
 
     mock_read_tag.assert_called_once()
+
+    mock_check.assert_called_once_with(mock_read_tag())
 
     mock_response.assert_called_once_with(mock_read_tag())
 

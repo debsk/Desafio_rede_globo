@@ -54,6 +54,27 @@ def test_create_card_interactor(interactor_factory):
     assert interactor.request == mock_request
     assert interactor.adapter == mock_adapter
 
+def test_read_tag_interactor_get_tag(interactor_factory):
+    interactor = interactor_factory()
+
+    result = interactor._get_tag()
+
+    tag_mock = interactor.adapter.query().filter().first()
+
+    assert result == tag_mock
+
+
+@patch.object(CreateTagInteractor, '_get_tag')
+def test_check_tag_exists(mock_get_tag,
+                           interactor_factory):
+    interactor = interactor_factory()
+
+    interactor._get_tag.return_value = None
+
+    interactor._get_tag()
+
+    mock_get_tag.assert_called_once()
+
 
 @patch(f'{path_root}.Tag')
 def test_create_tag_interactor_create_tag(tag_function_mock,
@@ -73,14 +94,18 @@ def test_create_tag_interactor_create_tag(tag_function_mock,
 
 
 @patch.object(CreateTagInteractor, '_create_tag')
+@patch.object(CreateTagInteractor, '_check_exist_tag')
 @patch(f'{path_root}.CreateTagResponseModel')
 def test_post_create_user_interactor_run(mock_response,
+                                         mock_check,
                                          mock_create_tag,
                                          interactor_factory):
 
     interactor = interactor_factory()
 
     result = interactor.run()
+
+    mock_check.assert_called_once()
 
     mock_create_tag.assert_called_once()
 
