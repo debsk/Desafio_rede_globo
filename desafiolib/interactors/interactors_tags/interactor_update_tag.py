@@ -15,7 +15,7 @@ class UpdateTagResponseModel:
         return self.tag.to_json()
 
 
-class UpdateCardInteractor:
+class UpdateTagInteractor:
     def __init__(self, request: UpdateTagRequestModel,
                  adapter: UserAlchemyAdapter):
         self.request = request
@@ -25,14 +25,14 @@ class UpdateCardInteractor:
         return self.adapter.query(Tag). \
             filter(Tag.id == self.request.id).first()
 
-    def _update_tag(self, tag: Tag):
-        tag.name = self.request.name
+    def _update_tag(self):
+        tag = Tag(name=self.request.name)
         self.adapter.commit()
 
-        return tag.mane
+        return tag
 
     def run(self):
         tag = self._get_tag()
-        self._update_tag(tag)
+        self._update_tag()
         response = UpdateTagResponseModel(tag)
         return response

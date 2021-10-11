@@ -6,9 +6,9 @@ from domain.models import card_models
 from domain.database.settings import UserAlchemyAdapter, engine
 
 from desafiolib.interactors.interactors_cards.interactor_create_card import \
-    CreateCardRequestModel, CreateCardInteractor, CreateCardResponseModel
+    CreateCardRequestModel, CreateCardInteractor
 from desafiolib.interactors.interactors_cards.interactor_read_card import \
-    ReadCardRequestModel, ReadCardInteractor, ReadCardResponseModel
+    ReadCardRequestModel, ReadCardInteractor
 from desafiolib.interactors.interactors_cards.interactor_remove_card import \
     DeleteCardRequestModel, DeleteCardInteractor
 from desafiolib.interactors.interactors_cards.interactor_card_all import \
@@ -23,7 +23,7 @@ card = APIRouter()
 
 @card.post("/card")
 def post_create_card(json_body: Card.Schema,
-                adapter: Session = Depends(UserAlchemyAdapter)):
+                     adapter: Session = Depends(UserAlchemyAdapter)):
     request = CreateCardRequestModel(json_body)
     interactor = CreateCardInteractor(request, adapter)
 
@@ -71,7 +71,6 @@ def put_update_card(json_body: Card.Schema,
 @card.get("/card_all/{tag_id}")
 def get_all_cards(tag_id,
                   adapter: Session = Depends(UserAlchemyAdapter)):
-
     request = AllCardRequestModel(tag_id)
 
     interactor = AllCardInteractor(request, adapter)

@@ -5,7 +5,6 @@ from pytest import fixture
 from desafiolib.interactors.interactors_tags.interactor_create_tag import \
     CreateTagRequestModel, CreateTagInteractor, CreateTagResponseModel
 
-
 path_root = 'desafiolib.interactors.interactors_tags.interactor_create_tag'
 
 
@@ -15,6 +14,7 @@ def interactor_factory():
                            mock_adapter=MagicMock()):
         return CreateTagInteractor(mock_request,
                                    mock_adapter)
+
     return request_interactor
 
 
@@ -54,6 +54,7 @@ def test_create_card_interactor(interactor_factory):
     assert interactor.request == mock_request
     assert interactor.adapter == mock_adapter
 
+
 def test_read_tag_interactor_get_tag(interactor_factory):
     interactor = interactor_factory()
 
@@ -66,7 +67,7 @@ def test_read_tag_interactor_get_tag(interactor_factory):
 
 @patch.object(CreateTagInteractor, '_get_tag')
 def test_check_tag_exists(mock_get_tag,
-                           interactor_factory):
+                          interactor_factory):
     interactor = interactor_factory()
 
     interactor._get_tag.return_value = None
@@ -79,7 +80,6 @@ def test_check_tag_exists(mock_get_tag,
 @patch(f'{path_root}.Tag')
 def test_create_tag_interactor_create_tag(tag_function_mock,
                                           interactor_factory):
-
     interactor = interactor_factory()
 
     result = interactor._create_tag()
@@ -100,7 +100,6 @@ def test_post_create_user_interactor_run(mock_response,
                                          mock_check,
                                          mock_create_tag,
                                          interactor_factory):
-
     interactor = interactor_factory()
 
     result = interactor.run()

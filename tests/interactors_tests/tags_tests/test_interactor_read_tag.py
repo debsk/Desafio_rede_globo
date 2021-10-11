@@ -39,9 +39,7 @@ def test_read_tag_response_model_call():
 
     result = ReadTagResponseModel(tag_mock)()
 
-    tag_mock.to_json.assert_called_once_with()
-
-    assert result == tag_mock.to_json()
+    assert result == tag_mock
 
 
 def test_read_tag_interactor(interactor_factory):
@@ -59,7 +57,7 @@ def test_read_tag_interactor_get_read_tag(interactor_factory):
 
     result = interactor._get_read_tag()
 
-    tag_mock = interactor.adapter.tag_models().filter().first()
+    tag_mock = interactor.adapter.query().filter().first()
 
     assert result == tag_mock
 

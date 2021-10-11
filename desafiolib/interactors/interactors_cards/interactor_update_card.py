@@ -29,18 +29,15 @@ class UpdateCardInteractor:
         return self.adapter.query(Card). \
             filter(Card.id == self.request.id).first()
 
-    def _update_card(self, card: Card):
-        card.text = self.request.text
-        card.tags = json.dumps(self.request.tags)
-
+    def _update_card(self):
+        card = Card(text=self.request.text,
+                    tags=json.dumps(self.request.tags))
         self.adapter.commit()
 
         return card
 
     def run(self):
         card = self._get_card()
-        self._update_card(card)
+        self._update_card()
         response = UpdateCardResponseModel(card)
         return response
-
-

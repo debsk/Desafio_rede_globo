@@ -20,7 +20,7 @@ tag = APIRouter()
 
 @tag.post("/tag")
 def post_create_tag(json_body: tag_models.Tag.Schema,
-               adapter: Session = Depends(UserAlchemyAdapter)):
+                    adapter: Session = Depends(UserAlchemyAdapter)):
     request = CreateTagRequestModel(json_body)
     interactor = CreateTagInteractor(request, adapter)
 
@@ -44,7 +44,6 @@ def get_read_tag(tag_id,
 @tag.delete("/tag/delete/{tag_id}")
 def delete_tag(tag_id,
                adapter: Session = Depends(UserAlchemyAdapter)):
-
     request = DeleteTagRequestModel(tag_id)
 
     interactor = DeleteTagInteractor(request, adapter)
@@ -61,6 +60,6 @@ def put_update_tag(tag_id,
 
     interactor = UpdateTagInteractor(request, adapter)
 
-    result = interactor()
+    result = interactor.run()
 
     return result()
