@@ -42,7 +42,7 @@ class DeleteTagInteractor:
         return {
             "status": 200,
             "message": "Tag was deleted",
-            "card": tag
+            "tag": tag
         }
 
     def run(self):
@@ -50,4 +50,3 @@ class DeleteTagInteractor:
         tag = self._delete_tag(tag_validate)
         response = DeleteTagResponseModel(tag)
         return response
-

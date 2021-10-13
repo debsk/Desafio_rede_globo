@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 from domain.database.settings import Base
@@ -13,4 +15,5 @@ class Tag(Base):
         return vars(self)
 
     class Schema(BaseModel):
+        id: Optional[int]
         name: str

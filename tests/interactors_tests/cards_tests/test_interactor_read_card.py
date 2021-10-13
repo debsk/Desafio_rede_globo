@@ -39,9 +39,7 @@ def test_read_card_response_model_call():
 
     result = ReadCardResponseModel(card_mock)()
 
-    card_mock.to_json.assert_called_once_with()
-
-    assert result == card_mock.to_json()
+    assert result == card_mock
 
 
 def test_read_card_interactor(interactor_factory):

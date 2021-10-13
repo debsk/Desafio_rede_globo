@@ -2,9 +2,6 @@ from typing import List
 import json
 from domain.database.settings import UserAlchemyAdapter
 from domain.models.card_models import Card
-from domain.models.tag_models import Tag
-
-from fastapi import HTTPException
 
 
 class AllCardRequestModel:
@@ -44,6 +41,3 @@ class AllCardInteractor:
         cards = self._get_all_card()
         response = AllCardResponseModel(cards)
         return response
-
-
-

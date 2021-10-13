@@ -3,8 +3,9 @@ from domain.models.tag_models import Tag
 
 
 class UpdateTagRequestModel:
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, body):
+        self.id = body.id
+        self.name = body.name
 
 
 class UpdateTagResponseModel:
@@ -15,7 +16,7 @@ class UpdateTagResponseModel:
         return self.tag.to_json()
 
 
-class UpdateCardInteractor:
+class UpdateTagInteractor:
     def __init__(self, request: UpdateTagRequestModel,
                  adapter: UserAlchemyAdapter):
         self.request = request
@@ -28,8 +29,7 @@ class UpdateCardInteractor:
     def _update_tag(self, tag: Tag):
         tag.name = self.request.name
         self.adapter.commit()
-
-        return tag.mane
+        return tag
 
     def run(self):
         tag = self._get_tag()
