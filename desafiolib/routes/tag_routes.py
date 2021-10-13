@@ -53,10 +53,10 @@ def delete_tag(tag_id,
     return result()
 
 
-@tag.put("/tag/update/{tag_id}")
-def put_update_tag(tag_id,
+@tag.put("/tag/update/")
+def put_update_tag(json_body: tag_models.Tag.Schema,
                    adapter: Session = Depends(UserAlchemyAdapter)):
-    request = UpdateTagRequestModel(tag_id)
+    request = UpdateTagRequestModel(json_body)
 
     interactor = UpdateTagInteractor(request, adapter)
 

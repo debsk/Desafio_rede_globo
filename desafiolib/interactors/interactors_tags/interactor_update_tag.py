@@ -3,8 +3,9 @@ from domain.models.tag_models import Tag
 
 
 class UpdateTagRequestModel:
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, body):
+        self.id = body.id
+        self.name = body.name
 
 
 class UpdateTagResponseModel:
@@ -25,14 +26,13 @@ class UpdateTagInteractor:
         return self.adapter.query(Tag). \
             filter(Tag.id == self.request.id).first()
 
-    def _update_tag(self):
-        tag = Tag(name=self.request.name)
+    def _update_tag(self, tag: Tag):
+        tag.name = self.request.name
         self.adapter.commit()
-
         return tag
 
     def run(self):
         tag = self._get_tag()
-        self._update_tag()
+        self._update_tag(tag)
         response = UpdateTagResponseModel(tag)
         return response

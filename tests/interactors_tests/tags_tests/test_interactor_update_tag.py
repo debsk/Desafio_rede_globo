@@ -19,12 +19,14 @@ def interactor_factory():
 
 
 def test_update_tag_request_model():
-    id_mock = MagicMock()
-    id_mock.return_value = {"id": MagicMock()}
+    body_mock = MagicMock()
+    body_mock.return_value = {"id": MagicMock(),
+                              "name": MagicMock()}
 
-    request = UpdateTagRequestModel(id_mock)
+    request = UpdateTagRequestModel(body_mock)
 
-    assert request.id == id_mock
+    assert request.id == body_mock.id
+    assert request.name == body_mock.name
 
 
 def test_update_tag_response_model():
@@ -65,18 +67,17 @@ def test_get_tag_update_interactor(interactor_factory):
     assert result == mock_tag
 
 
-@patch(f'{patch_root}.Tag')
-def test_update_tag_update_interactor(mock_function_tag,
-                                      interactor_factory):
+def test_update_tag_update_interactor(interactor_factory):
+    tag_mock = MagicMock()
+    tag_mock.return_value = {"name": MagicMock()}
     interactor = interactor_factory()
 
-    result = interactor._update_tag()
-
-    mock_tag = mock_function_tag(name=interactor.request.name)
+    result = interactor._update_tag(tag_mock)
 
     interactor.adapter.commit.assert_called_once()
 
-    assert result == mock_tag
+    assert tag_mock.name == interactor.request.name
+    assert result == tag_mock
 
 
 @patch.object(UpdateTagInteractor, '_get_tag')
@@ -92,7 +93,7 @@ def test_tag_interactor_run(mock_response,
 
     mock_get_tag.assert_called_once()
 
-    mock_update.assert_called_once_with()
+    mock_update.assert_called_once_with(mock_get_tag())
 
     mock_response.assert_called_once_with(mock_get_tag())
 

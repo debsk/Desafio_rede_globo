@@ -26,14 +26,14 @@ class ReadTagInteractor:
         return self.adapter.query(Tag). \
             filter(Tag.id == self.request.tag_id).first()
 
-    def _check_exist_read_card(self):
-        tag = self._get_read_tag()
+    @staticmethod
+    def _check_exist_read_tag(tag: Tag):
         if tag is None:
             raise HTTPException(status_code=400,
                                 detail="Tag not exist")
 
     def run(self):
         tag = self._get_read_tag()
-        self._check_exist_read_card(tag)
+        self._check_exist_read_tag(tag)
         response = ReadTagResponseModel(tag)
         return response
