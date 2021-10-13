@@ -47,11 +47,11 @@ def test_update_tag_response_model_call():
     assert result == tag_mock.to_json()
 
 
-def test_update_tag_interactor(interactor_factory):
+def test_update_tag_interactor():
     mock_request = MagicMock()
     mock_adapter = MagicMock()
 
-    interactor = interactor_factory(mock_request, mock_adapter)
+    interactor = UpdateTagInteractor(mock_request, mock_adapter)
 
     assert interactor.request == mock_request
     assert interactor.adapter == mock_adapter

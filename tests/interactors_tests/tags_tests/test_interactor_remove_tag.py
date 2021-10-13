@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock, patch
-
-from pytest import fixture
+from pytest import fixture, raises
 
 from desafiolib.interactors.interactors_tags.interactor_remove_tag import \
     DeleteTagRequestModel, DeleteTagResponseModel, DeleteTagInteractor
@@ -67,11 +66,23 @@ def test_check_tag_delete(mock_get_remove_tag,
                           interactor_factory):
     interactor = interactor_factory()
 
-    interactor._get_tag.return_value = None
+    interactor._get_tag.return_value = MagicMock()
 
-    interactor._get_tag()
+    result = interactor._check_tag_delete()
 
     mock_get_remove_tag.assert_called_once()
+
+    assert result == mock_get_remove_tag()
+
+
+@patch.object(DeleteTagInteractor, '_get_tag')
+def test_check_tag_delete_error(mock_tag,
+                                interactor_factory):
+    mock_tag.return_value = None
+    interactor = interactor_factory()
+
+    with raises(BaseException):
+        interactor._check_tag_delete()
 
 
 @patch(f'{patch_root}.Tag')
